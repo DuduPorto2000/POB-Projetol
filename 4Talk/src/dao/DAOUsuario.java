@@ -21,5 +21,9 @@ public class DAOUsuario extends DAO<Usuario> {
 	else
 		return null;
 	}
+	public boolean verificaLogado(Usuario user) {
+		return user.ativo()?true:false;
+	}
+	
 
 }

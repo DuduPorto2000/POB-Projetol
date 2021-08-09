@@ -18,5 +18,14 @@ public class DAOMensagem  extends DAO<Mensagem> {
 		else
 			return null;
 	}
-	
+	public static List<Mensagem> queryMSGs(String termo) {
+		Query q = manager.query();
+		q.constrain(Mensagem.class);
+		q.descend("texto").constrain(termo).like();
+		List<Mensagem> result = q.execute();
+		if (result.size() > 0)
+			return result;
+		else
+			return null;
+	}
 }

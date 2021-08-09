@@ -1,6 +1,9 @@
 package fachada;
 
 import java.util.List;
+
+import org.graalvm.compiler.lir.aarch64.AArch64ControlFlow.ReturnOp;
+
 import dao.DAO;
 import dao.DAOLog;
 import dao.DAOMensagem;
@@ -47,6 +50,14 @@ public class Fachada {
 		 *  o termo (considerar case insensitive)
 		 * 
 		 */
+		DAO.begin();
+		List<Mensagem> retorno = DAOMensagem.queryMSGs(termo);
+		if(retorno.isEmpty()) {
+			DAO.rollback();
+			throw new Exception("não existe mensagem com este termo.");
+		}
+		DAO.commit();
+		return retorno;
 	}
 
 	public static Usuario criarUsuario(String nome, String senha) throws  Exception{
@@ -106,10 +117,20 @@ public class Fachada {
 		 */
 
 		//para gerar o novo id da mensagem utilize:
-		//		int id = daomensagem.obterUltimoId();
-		//		id++;
-		//		Mensagem m = new Mensagem(id, usuariologado, texto);
-
+		DAO.begin();
+		Usuario usuariologado = getLogado();
+		if(usuariologado == null) {
+			DAO.rollback();
+			throw new Exception("Usuário não está logado.");
+		}
+		int id = daomensagem.obterUltimoId();
+		id++;
+		Mensagem m = new Mensagem(id, usuariologado, texto);
+		daomensagem.create(m);
+		usuariologado.adicionar(m);
+		DAO.commit();
+		return m;
+		
 	}
 
 
@@ -139,6 +160,33 @@ public class Fachada {
 		 * remover cada mensagem da lista de mensagens do usuario logado
 		 * apagar cada mensagem do banco 
 		 */
+		DAO.begin();
+		Usuario usuariologado = getLogado();
+		if(usuariologado == null) {
+			DAO.rollback();
+			throw new Exception("Usuário não está logado.");
+		}
+		int size = daomensagem.readAll().size();
+		for (int i : ids) {
+			if(i > size) {
+				DAO.rollback();
+				throw new Exception("Mensagem não encontrada.");
+			}
+			Mensagem m = daomensagem.read(i);
+			if(!usuariologado.getMensagens().contains(m)) {
+				DAO.rollback();
+				throw new Exception("Mensagem não pertence ao usuário logado.");
+			}
+			if(m == null) {
+				DAO.rollback();
+				throw new Exception("Mensagem não encontrada.");
+			}
+			daomensagem.delete(m);
+			usuariologado.remover(m);
+		}
+		DAO.commit();
+		
+		
 	}
 
 	public static void sairDoGrupo() throws  Exception{
