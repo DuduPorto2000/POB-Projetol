@@ -24,6 +24,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 import fachada.Fachada;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TelaPrincipal {
 	private JFrame frame;
@@ -94,7 +96,7 @@ public class TelaPrincipal {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setText("Inicializando...");
 		label.setBounds(0, 0, 450, 249);
-		imagem = new ImageIcon(getClass().getResource("/imagens/imagem.jpg"));
+		imagem = new ImageIcon(getClass().getResource("/imagens/imagem.png"));
 		imagem = new ImageIcon(imagem.getImage().getScaledInstance(label.getWidth(),label.getHeight(), Image.SCALE_DEFAULT));//		label.setIcon(fotos);
 		frame.getContentPane().add(label);
 		frame.setResizable(false);
@@ -134,41 +136,46 @@ public class TelaPrincipal {
 			}
 		});
 		mnUsuario.add(mntmSairGrupo);
-		
-		
-				//-----------------------------------------------------------------
-		
-				mnLogar = new JMenu("Logar");
-				menuBar.add(mnLogar);
-				
-						mntmLogin = new JMenuItem("Login");
-						mntmLogin.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent arg0) {
-								TelaLogin telalogin = new TelaLogin();
-								if(Fachada.getLogado()!=null)
-									frame.setTitle("4TALK - Usuario logado=" + Fachada.getLogado().getNome());
-							}
-						});
-						mnLogar.add(mntmLogin);
-						
-								mntmLogoff = new JMenuItem("Logoff");
-								mntmLogoff.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent arg0) {
-										Fachada.logoff();
-										frame.setTitle("4TALK - Sem Usuario logado");
-									}
-								});
-								mnLogar.add(mntmLogoff);
+
+
+		//-----------------------------------------------------------------
+
+		mnLogar = new JMenu("Logar");
+		menuBar.add(mnLogar);
+
+		mntmLogin = new JMenuItem("Login");
+		mntmLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaLogin telalogin = new TelaLogin();
+				if(Fachada.getLogado()!=null)
+					frame.setTitle("4TALK - Usuario logado=" + Fachada.getLogado().getNome());
+			}
+		});
+		mnLogar.add(mntmLogin);
+
+		mntmLogoff = new JMenuItem("Logoff");
+		mntmLogoff.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Fachada.logoff();
+				frame.setTitle("4TALK - Sem Usuario logado");
+			}
+		});
+		mnLogar.add(mntmLogoff);
 
 
 
 		//-----------------------------------------------------------------
 		mnMensagem = new JMenu("Mensagem");
+		mnMensagem.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				TelaMensagem tela = new TelaMensagem();
+			}
+		});
 		menuBar.add(mnMensagem);
-		
+
 		mnLog = new JMenu("Logs");
-		mnLog.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		mnLog.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
 				TelaLogs tela = new TelaLogs();
 			}
 		});

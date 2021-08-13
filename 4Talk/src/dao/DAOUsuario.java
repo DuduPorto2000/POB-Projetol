@@ -11,10 +11,10 @@ import modelo.Usuario;
 public class DAOUsuario extends DAO<Usuario> {
 
 	public Usuario read(Object chave) {
-	String nome = (String) chave;
+	String nomesenha = (String) chave;
 	Query q = manager.query();
 	q.constrain(Usuario.class);
-	q.descend("nome").constrain(nome);
+	q.descend("nomesenha").constrain(nomesenha);
 	List<Usuario> result = q.execute();
 	if (result.size() > 0)
 		return (Usuario) result.get(0);

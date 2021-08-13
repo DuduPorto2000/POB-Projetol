@@ -52,7 +52,7 @@ public class Fachada {
 		 */
 		DAO.begin();
 		List<Mensagem> retorno = DAOMensagem.queryMSGs(termo);
-		if(retorno.isEmpty()) {
+		if(retorno == null) {
 			DAO.rollback();
 			throw new Exception("não existe mensagem com este termo.");
 		}
