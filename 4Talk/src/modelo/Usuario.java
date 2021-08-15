@@ -23,6 +23,11 @@ public class Usuario {
 	public boolean ativo() {
 		return ativo;
 	}
+	
+	public void desativo() {
+		this.ativo = false;
+	}
+	
 
 	public List<Mensagem> getMensagens() {
 		return mensagens;

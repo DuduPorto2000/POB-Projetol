@@ -196,6 +196,21 @@ public class Fachada {
 		 * criar a mensagem "fulano saiu do grupo"
 		 * desativar o usuario logado e fazer logoff dele
 		 */
+		DAO.begin(); 
+		Usuario usuarioLogado = getLogado();
+		 if(usuarioLogado == null) {
+			 DAO.rollback();
+			 throw new Exception("Nenhum usuario logado.");
+		 }
+		 String texto = usuarioLogado.getNome() + " saiu do grupo";
+		 int id = daomensagem.obterUltimoId();
+		 id++;
+		 Mensagem m = new Mensagem(id,usuarioLogado, texto);
+		 daomensagem.create(m);
+		 usuarioLogado.desativo();
+		 daousuario.update(usuarioLogado);
+		 logoff();
+		 DAO.commit();
 	}
 
 
