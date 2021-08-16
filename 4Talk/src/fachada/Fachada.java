@@ -1,9 +1,6 @@
 package fachada;
 
 import java.util.List;
-
-import org.graalvm.compiler.lir.aarch64.AArch64ControlFlow.ReturnOp;
-
 import dao.DAO;
 import dao.DAOLog;
 import dao.DAOMensagem;
